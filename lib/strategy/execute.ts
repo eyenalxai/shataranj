@@ -1,4 +1,4 @@
-import { randomMove, stockFishMove } from "@/lib/strategy"
+import { randomMove, stockFishMove } from "@/lib/strategy/moves"
 
 export const exhaustiveCheck = (_: never): never => {
 	throw new Error("Exhaustive check failed")

@@ -16,3 +16,20 @@ export type ControlMethod = "manual" | Strategy
 export type PlayerControls = {
 	[key in Color]: ControlMethod
 }
+
+export type Reason =
+	| "checkmate"
+	| "stalemate"
+	| "insufficient_material"
+	| "seventyfive_moves"
+	| "fivefold_repetition"
+	| "fifty_moves"
+	| "threefold_repetition"
+	| "variant_win"
+	| "variant_loss"
+	| "variant_draw"
+
+export type GameOutcome = {
+	winner: Color
+	reason: Reason
+}
