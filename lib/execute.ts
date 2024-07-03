@@ -1,6 +1,4 @@
-import type { ChessMove } from "@/lib/types"
-
-export type StrategyFunction = ({ fen }: { fen: string }) => ChessMove | Promise<ChessMove>
+export type StrategyFunction = ({ fen }: { fen: string }) => string | Promise<string | null>
 
 type ExecuteStrategyProps = {
 	strategyFn: StrategyFunction

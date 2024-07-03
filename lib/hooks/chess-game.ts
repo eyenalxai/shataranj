@@ -1,8 +1,8 @@
 "use client"
 
 import { executeStrategy } from "@/lib/execute"
-import { randomMove } from "@/lib/strategy"
-import type { ChessMove, PlayerControls } from "@/lib/types"
+import { randomMove, stockFishMove } from "@/lib/strategy"
+import type { PlayerControls } from "@/lib/types"
 import { Chess, type Square } from "chess.js"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
@@ -10,8 +10,8 @@ import { toast } from "sonner"
 export const useChessGame = () => {
 	const [chessboard, setChessboard] = useState(new Chess())
 	const [playerControls, _setPlayerControls] = useState<PlayerControls>({
-		w: "manual",
-		b: "random-move"
+		w: "stockfish",
+		b: "stockfish"
 	})
 
 	useEffect(() => {
@@ -23,6 +23,21 @@ export const useChessGame = () => {
 					strategyFn: randomMove,
 					fen: chessboard.fen()
 				})
+
+				if (chessMove === null) return
+
+				const chessboardCopy = new Chess(chessboard.fen())
+				chessboardCopy.move(chessMove)
+				setChessboard(chessboardCopy)
+			}
+
+			if (playerControls[chessboard.turn()] === "stockfish") {
+				const chessMove = await executeStrategy({
+					strategyFn: stockFishMove,
+					fen: chessboard.fen()
+				})
+
+				if (chessMove === null) return
 
 				const chessboardCopy = new Chess(chessboard.fen())
 				chessboardCopy.move(chessMove)
@@ -39,14 +54,11 @@ export const useChessGame = () => {
 
 	const onPieceDrop = (sourceSquare: Square, targetSquare: Square) => {
 		try {
-			const chessMove: ChessMove = {
-				from: sourceSquare,
-				to: targetSquare,
-				promotion: "q"
-			}
-
 			const chessboardCopy = new Chess(chessboard.fen())
-			const move = chessboardCopy.move(chessMove)
+			const move = chessboardCopy.move({
+				from: sourceSquare,
+				to: targetSquare
+			})
 			setChessboard(chessboardCopy)
 
 			return move !== null

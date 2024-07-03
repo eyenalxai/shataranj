@@ -1,10 +1,4 @@
-import type { Color, PieceSymbol, Square } from "chess.js"
-
-export type ChessMove = {
-	from: Square
-	to: Square
-	promotion?: PieceSymbol
-}
+import type { Color } from "chess.js"
 
 type Strategy = "random-move" | "stockfish"
 
