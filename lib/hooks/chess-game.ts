@@ -1,12 +1,10 @@
 "use client"
 
 import { strategyFunctions } from "@/lib/strategy/list"
-import type { ControlMethod, PlayerControls } from "@/lib/types"
+import type { ControlMethod, PlayerControls, SetPlayerStrategy } from "@/lib/types"
 import { Chess, type Color, type Square } from "chess.js"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
-
-export type SetPlayerStrategy = ({ player, strategy }: { player: Color; strategy: ControlMethod }) => void
 
 export const useChessGame = () => {
 	const [chessboard, setChessboard] = useState(new Chess())

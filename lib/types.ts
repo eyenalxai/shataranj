@@ -33,3 +33,5 @@ export type GameOutcome = {
 	winner: Color
 	reason: Reason
 }
+
+export type SetPlayerStrategy = ({ player, strategy }: { player: Color; strategy: ControlMethod }) => void

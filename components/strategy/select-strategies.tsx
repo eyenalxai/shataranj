@@ -1,6 +1,5 @@
 import { SelectStrategy } from "@/components/strategy/select-strategy"
-import type { SetPlayerStrategy } from "@/lib/hooks/chess-game"
-import type { PlayerControls } from "@/lib/types"
+import type { PlayerControls, SetPlayerStrategy } from "@/lib/types"
 import { cn } from "@/lib/utils"
 
 type SelectStrategiesProps = {

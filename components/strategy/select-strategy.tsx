@@ -7,8 +7,7 @@ import {
 	SelectTrigger,
 	SelectValue
 } from "@/components/ui/select"
-import type { SetPlayerStrategy } from "@/lib/hooks/chess-game"
-import type { ControlMethod } from "@/lib/types"
+import type { ControlMethod, SetPlayerStrategy } from "@/lib/types"
 import { cn } from "@/lib/utils"
 import type { Color } from "chess.js"
 
