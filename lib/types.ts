@@ -1,7 +1,15 @@
+import type { Color, PieceSymbol, Square } from "chess.js"
+
+export type PromotablePieces = Exclude<PieceSymbol, "p" | "k">
+
 export type ChessMove = {
-	from: string
-	to: string
-	promotion?: string
+	from: Square
+	to: Square
+	promotion?: PromotablePieces
 }
 
-export type Player = "white" | "black"
+type ControlMethod = "manual" | "random-move" | "stockfish"
+
+export type PlayerControls = {
+	[key in Color]: ControlMethod
+}

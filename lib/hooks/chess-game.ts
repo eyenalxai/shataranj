@@ -1,10 +1,15 @@
-import type { ChessMove } from "@/lib/types"
-import { Chess, type Color, type Square } from "chess.js"
+"use client"
+
+import type { ChessMove, PlayerControls } from "@/lib/types"
+import { Chess, type Square } from "chess.js"
 import { useState } from "react"
 
 export const useChessGame = () => {
 	const [game, setGame] = useState(new Chess())
-	const [playerColor, setPlayerColor] = useState<Color>("w")
+	const [playerControls, setPlayerControls] = useState<PlayerControls>({
+		w: "manual",
+		b: "manual"
+	})
 
 	const onPieceDrop = (sourceSquare: Square, targetSquare: Square) => {
 		const chessMove: ChessMove = {
@@ -20,5 +25,5 @@ export const useChessGame = () => {
 		return move !== null
 	}
 
-	return { game, onPieceDrop, disabled: playerColor !== game.turn() }
+	return { game, onPieceDrop, disabled: playerControls[game.turn()] !== "manual" }
 }
