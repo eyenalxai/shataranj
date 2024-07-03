@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 
 export const useChessGame = () => {
 	const [chessboard, setChessboard] = useState(new Chess())
-	const [playerControls, setPlayerControls] = useState<PlayerControls>({
+	const [playerControls, _setPlayerControls] = useState<PlayerControls>({
 		w: "manual",
 		b: "random-move"
 	})
