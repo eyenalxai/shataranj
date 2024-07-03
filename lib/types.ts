@@ -3,3 +3,5 @@ export type ChessMove = {
 	to: string
 	promotion?: string
 }
+
+export type Player = "white" | "black"

@@ -1,11 +1,12 @@
 import type { ChessMove } from "@/lib/types"
-import { Chess, type Square } from "chess.js"
+import { Chess, type Color, type Square } from "chess.js"
 import { useState } from "react"
 
 export const useChessGame = () => {
 	const [game, setGame] = useState(new Chess())
+	const [playerColor, setPlayerColor] = useState<Color>("w")
 
-	const onDrop = (sourceSquare: Square, targetSquare: Square) => {
+	const onPieceDrop = (sourceSquare: Square, targetSquare: Square) => {
 		const chessMove: ChessMove = {
 			from: sourceSquare,
 			to: targetSquare,
@@ -19,5 +20,5 @@ export const useChessGame = () => {
 		return move !== null
 	}
 
-	return { game, onDrop }
+	return { game, onPieceDrop, disabled: playerColor !== game.turn() }
 }
