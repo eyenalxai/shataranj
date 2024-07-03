@@ -1,10 +1,12 @@
 "use client"
 
 import { executeStrategy } from "@/lib/execute"
-import type { PlayerControls, Strategy } from "@/lib/types"
+import type { ControlMethod, PlayerControls } from "@/lib/types"
 import { Chess, type Color, type Square } from "chess.js"
 import { useEffect, useMemo, useState } from "react"
 import { toast } from "sonner"
+
+export type SetPlayerStrategy = ({ player, strategy }: { player: Color; strategy: ControlMethod }) => void
 
 export const useChessGame = () => {
 	const [chessboard, setChessboard] = useState(new Chess())
@@ -13,7 +15,7 @@ export const useChessGame = () => {
 		b: "manual"
 	})
 
-	const setPlayerStrategy = ({ player, strategy }: { player: Color; strategy: Strategy }) => {
+	const setPlayerStrategy: SetPlayerStrategy = ({ player, strategy }: { player: Color; strategy: ControlMethod }) => {
 		setPlayerControls((prev) => {
 			const newPlayerControls = { ...prev }
 			newPlayerControls[player] = strategy
@@ -75,5 +77,11 @@ export const useChessGame = () => {
 		}
 	}
 
-	return { chessboard, onPieceDrop, disabled: playerControls[chessboard.turn()] !== "manual", setPlayerStrategy }
+	return {
+		chessboard,
+		onPieceDrop,
+		disabled: playerControls[chessboard.turn()] !== "manual",
+		playerControls,
+		setPlayerStrategy
+	}
 }

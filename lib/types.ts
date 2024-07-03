@@ -11,7 +11,7 @@ type StockfishStrategy =
 
 export type Strategy = "random-move" | StockfishStrategy
 
-type ControlMethod = "manual" | Strategy
+export type ControlMethod = "manual" | Strategy
 
 export type PlayerControls = {
 	[key in Color]: ControlMethod
