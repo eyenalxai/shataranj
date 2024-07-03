@@ -30,7 +30,11 @@ export const useChessGame = () => {
 			}
 		}
 
-		makeMove().catch((error) => console.error(`Error making move: ${error}`))
+		const timeout = setTimeout(() => {
+			makeMove().catch((error) => toast.error(`${error}`))
+		}, 400)
+
+		return () => clearTimeout(timeout)
 	}, [playerControls, chessboard])
 
 	const onPieceDrop = (sourceSquare: Square, targetSquare: Square) => {
