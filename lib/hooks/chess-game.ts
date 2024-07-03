@@ -6,22 +6,22 @@ import { Chess, type Square } from "chess.js"
 import { useEffect, useState } from "react"
 
 export const useChessGame = () => {
-	const [game, setGame] = useState(new Chess())
+	const [chessboard, setChessboard] = useState(new Chess())
 	const [playerControls, setPlayerControls] = useState<PlayerControls>({
 		w: "manual",
 		b: "random-move"
 	})
 
 	useEffect(() => {
-		if (playerControls[game.turn()] === "manual") return
+		if (playerControls[chessboard.turn()] === "manual") return
 
-		if (playerControls[game.turn()] === "random-move") {
-			const chessMove = randomMove(game.fen())
-			const gameCopy = new Chess(game.fen())
-			gameCopy.move(chessMove)
-			setGame(gameCopy)
+		if (playerControls[chessboard.turn()] === "random-move") {
+			const chessMove = randomMove(chessboard.fen())
+			const chessboardCopy = new Chess(chessboard.fen())
+			chessboardCopy.move(chessMove)
+			setChessboard(chessboardCopy)
 		}
-	}, [playerControls, game])
+	}, [playerControls, chessboard])
 
 	const onPieceDrop = (sourceSquare: Square, targetSquare: Square) => {
 		const chessMove: ChessMove = {
@@ -30,12 +30,12 @@ export const useChessGame = () => {
 			promotion: "q"
 		}
 
-		const gameCopy = new Chess(game.fen())
-		const move = gameCopy.move(chessMove)
-		setGame(gameCopy)
+		const chessboardCopy = new Chess(chessboard.fen())
+		const move = chessboardCopy.move(chessMove)
+		setChessboard(chessboardCopy)
 
 		return move !== null
 	}
 
-	return { game, onPieceDrop, disabled: playerControls[game.turn()] !== "manual" }
+	return { chessboard, onPieceDrop, disabled: playerControls[chessboard.turn()] !== "manual" }
 }
