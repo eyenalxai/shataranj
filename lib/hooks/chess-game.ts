@@ -1,5 +1,6 @@
 "use client"
 
+import { executeStrategy } from "@/lib/execute"
 import { randomMove } from "@/lib/strategy"
 import type { ChessMove, PlayerControls } from "@/lib/types"
 import { Chess, type Square } from "chess.js"
@@ -15,12 +16,20 @@ export const useChessGame = () => {
 	useEffect(() => {
 		if (playerControls[chessboard.turn()] === "manual") return
 
-		if (playerControls[chessboard.turn()] === "random-move") {
-			const chessMove = randomMove(chessboard.fen())
-			const chessboardCopy = new Chess(chessboard.fen())
-			chessboardCopy.move(chessMove)
-			setChessboard(chessboardCopy)
+		const makeMove = async () => {
+			if (playerControls[chessboard.turn()] === "random-move") {
+				const chessMove = await executeStrategy({
+					strategyFn: randomMove,
+					fen: chessboard.fen()
+				})
+
+				const chessboardCopy = new Chess(chessboard.fen())
+				chessboardCopy.move(chessMove)
+				setChessboard(chessboardCopy)
+			}
 		}
+
+		makeMove().catch((error) => console.error(`Error making move: ${error}`))
 	}, [playerControls, chessboard])
 
 	const onPieceDrop = (sourceSquare: Square, targetSquare: Square) => {
