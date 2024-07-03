@@ -52,6 +52,7 @@ export const useChessGame = () => {
 			return move !== null
 		} catch (error) {
 			toast.error(`${error}`)
+			return false
 		}
 	}
 
