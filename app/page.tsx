@@ -8,7 +8,7 @@ export default function Home() {
 	const { chessboard, onPieceDrop, disabled, setPlayerStrategy } = useChessGame()
 
 	return (
-		<div className={cn(["w-5/6", "sm:w-4/5", "md:w-3/4", "lg:w-2/3", "xl:w-1/3"])}>
+		<div className={cn(["size-[320px]", "sm:size-[360pcx]", "md:size-[480px]", "lg:size-[560px]", "xl:size-[600px]"])}>
 			<Chessboard
 				position={chessboard.fen()}
 				onPieceDrop={onPieceDrop}
