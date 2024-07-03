@@ -13,8 +13,13 @@ export const randomMove = ({ fen }: RandomMoveProps) => {
 	return randomElement(chessboard.moves())
 }
 
-export const stockFishMove = async ({ fen }: RandomMoveProps) => {
-	return fetcher(`/api/moves/stockfish?fen=${fen}`)
+type StockFishMoveProps = {
+	fen: string
+	maxTime: number
+}
+
+export const stockFishMove = async ({ fen, maxTime }: StockFishMoveProps) => {
+	return fetcher(`/api/moves/stockfish?fen=${fen}&maxTime=${maxTime}`)
 		.then((response) => {
 			if (!response.ok) {
 				toast.error(`Error: ${response.status} ${response.statusText}`)

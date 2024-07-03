@@ -1,6 +1,6 @@
 import type { Color } from "chess.js"
 
-type Strategy = "random-move" | "stockfish"
+export type Strategy = "random-move" | "stockfish"
 
 type ControlMethod = "manual" | Strategy
 

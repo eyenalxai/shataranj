@@ -1,7 +1,6 @@
 "use client"
 
 import { executeStrategy } from "@/lib/execute"
-import { randomMove, stockFishMove } from "@/lib/strategy"
 import type { PlayerControls } from "@/lib/types"
 import { Chess, type Square } from "chess.js"
 import { useEffect, useState } from "react"
@@ -10,7 +9,7 @@ import { toast } from "sonner"
 export const useChessGame = () => {
 	const [chessboard, setChessboard] = useState(new Chess())
 	const [playerControls, _setPlayerControls] = useState<PlayerControls>({
-		w: "stockfish",
+		w: "random-move",
 		b: "stockfish"
 	})
 
@@ -20,7 +19,7 @@ export const useChessGame = () => {
 		const makeMove = async () => {
 			if (playerControls[chessboard.turn()] === "random-move") {
 				const chessMove = await executeStrategy({
-					strategyFn: randomMove,
+					strategy: "random-move",
 					fen: chessboard.fen()
 				})
 
@@ -33,8 +32,9 @@ export const useChessGame = () => {
 
 			if (playerControls[chessboard.turn()] === "stockfish") {
 				const chessMove = await executeStrategy({
-					strategyFn: stockFishMove,
-					fen: chessboard.fen()
+					strategy: "stockfish",
+					fen: chessboard.fen(),
+					maxTime: 1000
 				})
 
 				if (chessMove === null) return
