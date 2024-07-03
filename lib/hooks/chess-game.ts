@@ -5,6 +5,7 @@ import { randomMove } from "@/lib/strategy"
 import type { ChessMove, PlayerControls } from "@/lib/types"
 import { Chess, type Square } from "chess.js"
 import { useEffect, useState } from "react"
+import { toast } from "sonner"
 
 export const useChessGame = () => {
 	const [chessboard, setChessboard] = useState(new Chess())
@@ -33,17 +34,21 @@ export const useChessGame = () => {
 	}, [playerControls, chessboard])
 
 	const onPieceDrop = (sourceSquare: Square, targetSquare: Square) => {
-		const chessMove: ChessMove = {
-			from: sourceSquare,
-			to: targetSquare,
-			promotion: "q"
+		try {
+			const chessMove: ChessMove = {
+				from: sourceSquare,
+				to: targetSquare,
+				promotion: "q"
+			}
+
+			const chessboardCopy = new Chess(chessboard.fen())
+			const move = chessboardCopy.move(chessMove)
+			setChessboard(chessboardCopy)
+
+			return move !== null
+		} catch (error) {
+			toast.error(`${error}`)
 		}
-
-		const chessboardCopy = new Chess(chessboard.fen())
-		const move = chessboardCopy.move(chessMove)
-		setChessboard(chessboardCopy)
-
-		return move !== null
 	}
 
 	return { chessboard, onPieceDrop, disabled: playerControls[chessboard.turn()] !== "manual" }
