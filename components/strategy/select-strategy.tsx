@@ -21,8 +21,9 @@ export const SelectStrategy = ({ value, player, setPlayerStrategy }: SelectStrat
 	const strategyNames: Record<ControlMethod, string> = {
 		manual: "manual",
 		"random-move": "random move",
+		stockfish: "stockfish",
 		berserk: "berserk",
-		stockfish: "stockfish"
+		pacifist: "pacifist"
 	}
 
 	const playerColor = player === "w" ? "white" : "black"
