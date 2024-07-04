@@ -37,8 +37,6 @@ export const SelectStrategy = ({ value, player, setPlayerStrategy }: SelectStrat
 			<Select
 				value={value}
 				onValueChange={(value) => {
-					console.log(value)
-					console.log(player)
 					setPlayerStrategy({
 						player: player,
 						strategy: value as ControlMethod
