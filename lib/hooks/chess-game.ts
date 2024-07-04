@@ -1,7 +1,13 @@
 "use client"
 
-import { strategyFunctions } from "@/lib/strategy/list"
-import type { ControlMethod, GameOutcome, PlayerControls, SetPlayerStrategy } from "@/lib/types"
+import { randomMove, stockFishMove } from "@/lib/strategy/moves"
+import {
+	type ControlMethod,
+	type GameOutcome,
+	type PlayerControls,
+	type SetPlayerStrategy,
+	exhaustiveCheck
+} from "@/lib/types"
 import { Chess, type Color, type Square } from "chess.js"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
@@ -52,16 +58,36 @@ export const useChessGame = () => {
 		const signal = controller.signal
 
 		const makeMove = async () => {
-			const execute = strategyFunctions[strategy]
-
-			if (execute) {
-				const chessMove = await execute(chessboard.fen(), signal)
-				if (chessMove === null) return
-
-				const chessboardCopy = new Chess(chessboard.fen())
-				chessboardCopy.move(chessMove)
-				setChessboard(chessboardCopy)
+			const executeStrategy = () => {
+				const fen = chessboard.fen()
+				switch (strategy) {
+					case "random-move":
+						return randomMove({ fen: fen })
+					case "stockfish-10":
+						return stockFishMove({ fen: fen, maxTime: 10, signal: signal })
+					case "stockfish-100":
+						return stockFishMove({ fen: fen, maxTime: 100, signal: signal })
+					case "stockfish-500":
+						return stockFishMove({ fen: fen, maxTime: 500, signal: signal })
+					case "stockfish-1000":
+						return stockFishMove({ fen: fen, maxTime: 1000, signal: signal })
+					case "stockfish-2000":
+						return stockFishMove({ fen: fen, maxTime: 2000, signal: signal })
+					case "stockfish-3000":
+						return stockFishMove({ fen: fen, maxTime: 3000, signal: signal })
+					case "stockfish-5000":
+						return stockFishMove({ fen: fen, maxTime: 5000, signal: signal })
+					default:
+						return exhaustiveCheck(strategy)
+				}
 			}
+
+			const chessMove = await executeStrategy()
+			if (chessMove === null) return
+
+			const chessboardCopy = new Chess(chessboard.fen())
+			chessboardCopy.move(chessMove)
+			setChessboard(chessboardCopy)
 		}
 
 		const timeout = setTimeout(() => {
