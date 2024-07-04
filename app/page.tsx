@@ -30,10 +30,10 @@ export default function Home() {
 			</div>
 			<div className={cn("w-full", "flex", "flex-row", "justify-between", "items-center")}>
 				<div className={cn("flex", "flex-row", "gap-2")}>
-					<Button onClick={restart} variant={"outline"} className={cn("w-24")}>
+					<Button onClick={restart} variant={gameOutcome === null ? "outline" : "default"} className={cn("w-24")}>
 						restart
 					</Button>
-					<Button onClick={togglePause} variant={"outline"} className={cn("w-24")}>
+					<Button disabled={gameOutcome !== null} onClick={togglePause} variant={"outline"} className={cn("w-24")}>
 						{isPaused ? "resume" : "pause"}
 					</Button>
 				</div>
