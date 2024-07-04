@@ -1,14 +1,24 @@
 "use client"
 
 import { CustomChessboard } from "@/components/custom-chessboard"
-import { EndgameDrawer } from "@/components/endgame-drawer"
+import { OutcomeStatus } from "@/components/outcome-status"
 import { SelectStrategies } from "@/components/strategy/select-strategies"
 import { Button } from "@/components/ui/button"
 import { useChessGame } from "@/lib/hooks/chess-game"
 import { cn } from "@/lib/utils"
 
 export default function Home() {
-	const { chessboard, onPieceDrop, disabled, playerControls, setPlayerStrategy, gameOutcome, restart } = useChessGame()
+	const {
+		chessboard,
+		onPieceDrop,
+		disabled,
+		playerControls,
+		setPlayerStrategy,
+		gameOutcome,
+		restart,
+		isPaused,
+		togglePause
+	} = useChessGame()
 
 	return (
 		<div className={cn("flex", "flex-col", "items-start", "gap-y-2")}>
@@ -18,10 +28,17 @@ export default function Home() {
 			>
 				<CustomChessboard fen={chessboard.fen()} onPieceDrop={onPieceDrop} disabled={disabled} />
 			</div>
-			<Button onClick={restart} variant={"outline"}>
-				restart
-			</Button>
-			<EndgameDrawer gameOutcome={gameOutcome} restart={restart} />
+			<div className={cn("w-full", "flex", "flex-row", "justify-between", "items-center")}>
+				<div className={cn("flex", "flex-row", "gap-2")}>
+					<Button onClick={restart} variant={"outline"} className={cn("w-24")}>
+						restart
+					</Button>
+					<Button onClick={togglePause} variant={"outline"} className={cn("w-24")}>
+						{isPaused ? "resume" : "pause"}
+					</Button>
+				</div>
+				<OutcomeStatus gameOutcome={gameOutcome} />
+			</div>
 		</div>
 	)
 }

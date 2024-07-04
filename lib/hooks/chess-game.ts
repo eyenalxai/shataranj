@@ -12,13 +12,17 @@ export const useChessGame = () => {
 		w: "manual",
 		b: "manual"
 	})
-	const [gameOutcome, setGameOutcome] = useState<GameOutcome | null>(null)
+	const [isPaused, setIsPaused] = useState(false)
+	const [gameOutcome, setGameOutcome] = useState<GameOutcome | null>("stalemate")
 
 	const restart = () => {
 		setChessboard(new Chess())
 		setGameOutcome(null)
 		setPlayerControls({ w: "manual", b: "manual" })
+		setIsPaused(false)
 	}
+
+	const togglePause = () => setIsPaused((prev) => !prev)
 
 	const setPlayerStrategy: SetPlayerStrategy = ({ player, strategy }: { player: Color; strategy: ControlMethod }) => {
 		setPlayerControls((prev) => {
@@ -37,6 +41,7 @@ export const useChessGame = () => {
 	}, [chessboard])
 
 	useEffect(() => {
+		if (isPaused) return
 		if (gameOutcome !== null) return
 
 		const strategy = playerControls[chessboard.turn()]
@@ -61,7 +66,7 @@ export const useChessGame = () => {
 		}, 400)
 
 		return () => clearTimeout(timeout)
-	}, [playerControls, chessboard, gameOutcome])
+	}, [playerControls, chessboard, gameOutcome, isPaused])
 
 	const onPieceDrop = (sourceSquare: Square, targetSquare: Square) => {
 		try {
@@ -82,10 +87,12 @@ export const useChessGame = () => {
 	return {
 		chessboard,
 		onPieceDrop,
-		disabled: playerControls[chessboard.turn()] !== "manual",
+		disabled: playerControls[chessboard.turn()] !== "manual" || gameOutcome !== null || isPaused,
 		playerControls,
 		setPlayerStrategy,
 		gameOutcome,
-		restart
+		restart,
+		isPaused,
+		togglePause
 	}
 }
