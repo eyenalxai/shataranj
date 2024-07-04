@@ -1,6 +1,7 @@
 "use client"
 
-import { randomMove, stockFishMove } from "@/lib/strategy/moves"
+import { randomMove } from "@/lib/strategy/random"
+import { stockfishMove } from "@/lib/strategy/stockfish"
 import {
 	type ControlMethod,
 	type GameOutcome,
@@ -64,19 +65,19 @@ export const useChessGame = () => {
 					case "random-move":
 						return randomMove({ fen: fen })
 					case "stockfish-10":
-						return stockFishMove({ fen: fen, maxTime: 10, signal: signal })
+						return stockfishMove({ fen: fen, maxTime: 10, signal: signal })
 					case "stockfish-100":
-						return stockFishMove({ fen: fen, maxTime: 100, signal: signal })
+						return stockfishMove({ fen: fen, maxTime: 100, signal: signal })
 					case "stockfish-500":
-						return stockFishMove({ fen: fen, maxTime: 500, signal: signal })
+						return stockfishMove({ fen: fen, maxTime: 500, signal: signal })
 					case "stockfish-1000":
-						return stockFishMove({ fen: fen, maxTime: 1000, signal: signal })
+						return stockfishMove({ fen: fen, maxTime: 1000, signal: signal })
 					case "stockfish-2000":
-						return stockFishMove({ fen: fen, maxTime: 2000, signal: signal })
+						return stockfishMove({ fen: fen, maxTime: 2000, signal: signal })
 					case "stockfish-3000":
-						return stockFishMove({ fen: fen, maxTime: 3000, signal: signal })
+						return stockfishMove({ fen: fen, maxTime: 3000, signal: signal })
 					case "stockfish-5000":
-						return stockFishMove({ fen: fen, maxTime: 5000, signal: signal })
+						return stockfishMove({ fen: fen, maxTime: 5000, signal: signal })
 					default:
 						return exhaustiveCheck(strategy)
 				}
