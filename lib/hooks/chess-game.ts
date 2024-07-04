@@ -13,7 +13,7 @@ export const useChessGame = () => {
 		b: "manual"
 	})
 	const [isPaused, setIsPaused] = useState(false)
-	const [gameOutcome, setGameOutcome] = useState<GameOutcome | null>("stalemate")
+	const [gameOutcome, setGameOutcome] = useState<GameOutcome | null>(null)
 
 	const restart = () => {
 		setChessboard(new Chess())
