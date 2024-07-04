@@ -1,7 +1,7 @@
 "use client"
 
 import { strategyFunctions } from "@/lib/strategy/list"
-import type { ControlMethod, PlayerControls, SetPlayerStrategy } from "@/lib/types"
+import type { ControlMethod, GameOutcome, PlayerControls, SetPlayerStrategy } from "@/lib/types"
 import { Chess, type Color, type Square } from "chess.js"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
@@ -12,6 +12,13 @@ export const useChessGame = () => {
 		w: "manual",
 		b: "manual"
 	})
+	const [gameOutcome, setGameOutcome] = useState<GameOutcome | null>(null)
+
+	const restart = () => {
+		setChessboard(new Chess())
+		setGameOutcome(null)
+		setPlayerControls({ w: "manual", b: "manual" })
+	}
 
 	const setPlayerStrategy: SetPlayerStrategy = ({ player, strategy }: { player: Color; strategy: ControlMethod }) => {
 		setPlayerControls((prev) => {
@@ -22,6 +29,16 @@ export const useChessGame = () => {
 	}
 
 	useEffect(() => {
+		if (chessboard.isThreefoldRepetition()) setGameOutcome("threefold-repetition")
+		if (chessboard.isDraw()) setGameOutcome("draw")
+		if (chessboard.isCheckmate()) setGameOutcome("checkmate")
+		if (chessboard.isStalemate()) setGameOutcome("stalemate")
+		if (chessboard.isInsufficientMaterial()) setGameOutcome("insufficient-material")
+	}, [chessboard])
+
+	useEffect(() => {
+		if (gameOutcome !== null) return
+
 		const strategy = playerControls[chessboard.turn()]
 
 		if (strategy === "manual") return
@@ -44,7 +61,7 @@ export const useChessGame = () => {
 		}, 400)
 
 		return () => clearTimeout(timeout)
-	}, [playerControls, chessboard])
+	}, [playerControls, chessboard, gameOutcome])
 
 	const onPieceDrop = (sourceSquare: Square, targetSquare: Square) => {
 		try {
@@ -67,6 +84,8 @@ export const useChessGame = () => {
 		onPieceDrop,
 		disabled: playerControls[chessboard.turn()] !== "manual",
 		playerControls,
-		setPlayerStrategy
+		setPlayerStrategy,
+		gameOutcome,
+		restart
 	}
 }

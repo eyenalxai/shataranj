@@ -12,12 +12,12 @@ import { cn } from "@/lib/utils"
 import type { Color } from "chess.js"
 
 type SelectStrategyProps = {
-	defaultValue: ControlMethod
+	value: ControlMethod
 	player: Color
 	setPlayerStrategy: SetPlayerStrategy
 }
 
-export const SelectStrategy = ({ defaultValue, player, setPlayerStrategy }: SelectStrategyProps) => {
+export const SelectStrategy = ({ value, player, setPlayerStrategy }: SelectStrategyProps) => {
 	const strategyNames: Record<ControlMethod, string> = {
 		manual: "manual",
 		"random-move": "random move",
@@ -35,7 +35,7 @@ export const SelectStrategy = ({ defaultValue, player, setPlayerStrategy }: Sele
 	return (
 		<div className={cn("flex", "flex-col", "justify-center", "items-start")}>
 			<Select
-				defaultValue={defaultValue}
+				value={value}
 				onValueChange={(value) => {
 					console.log(value)
 					console.log(player)

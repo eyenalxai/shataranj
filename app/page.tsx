@@ -1,12 +1,13 @@
 "use client"
 
 import { CustomChessboard } from "@/components/custom-chessboard"
+import { EndgameDrawer } from "@/components/endgame-drawer"
 import { SelectStrategies } from "@/components/strategy/select-strategies"
 import { useChessGame } from "@/lib/hooks/chess-game"
 import { cn } from "@/lib/utils"
 
 export default function Home() {
-	const { chessboard, onPieceDrop, disabled, playerControls, setPlayerStrategy } = useChessGame()
+	const { chessboard, onPieceDrop, disabled, playerControls, setPlayerStrategy, gameOutcome, restart } = useChessGame()
 
 	return (
 		<div className={cn("flex", "flex-col", "items-start", "gap-y-2")}>
@@ -16,6 +17,7 @@ export default function Home() {
 			>
 				<CustomChessboard fen={chessboard.fen()} onPieceDrop={onPieceDrop} disabled={disabled} />
 			</div>
+			<EndgameDrawer gameOutcome={gameOutcome} restart={restart} />
 		</div>
 	)
 }
