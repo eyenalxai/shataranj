@@ -5,9 +5,17 @@ import { cn } from "@/lib/utils"
 import type { Metadata, Viewport } from "next"
 import type { ReactNode } from "react"
 
+const TITLE = "zugzwangia"
+const DESCRIPTION = "google en passant"
+
 export const metadata: Metadata = {
-	title: "zugzwangia",
-	description: "google en passant"
+	title: TITLE,
+	description: DESCRIPTION,
+	openGraph: {
+		title: TITLE,
+		description: DESCRIPTION,
+		type: "website"
+	}
 }
 
 export const viewport: Viewport = {
