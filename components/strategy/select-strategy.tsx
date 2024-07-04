@@ -22,13 +22,7 @@ export const SelectStrategy = ({ value, player, setPlayerStrategy }: SelectStrat
 		manual: "manual",
 		"random-move": "random move",
 		berserk: "berserk",
-		"stockfish-10": "stockfish 10",
-		"stockfish-100": "stockfish 100",
-		"stockfish-500": "stockfish 500",
-		"stockfish-1000": "stockfish 1000",
-		"stockfish-2000": "stockfish 2000",
-		"stockfish-3000": "stockfish 3000",
-		"stockfish-5000": "stockfish 5000"
+		stockfish: "stockfish"
 	}
 
 	const playerColor = player === "w" ? "white" : "black"
