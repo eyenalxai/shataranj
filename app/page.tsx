@@ -3,6 +3,7 @@
 import { CustomChessboard } from "@/components/custom-chessboard"
 import { EndgameDrawer } from "@/components/endgame-drawer"
 import { SelectStrategies } from "@/components/strategy/select-strategies"
+import { Button } from "@/components/ui/button"
 import { useChessGame } from "@/lib/hooks/chess-game"
 import { cn } from "@/lib/utils"
 
@@ -17,6 +18,9 @@ export default function Home() {
 			>
 				<CustomChessboard fen={chessboard.fen()} onPieceDrop={onPieceDrop} disabled={disabled} />
 			</div>
+			<Button onClick={restart} variant={"outline"}>
+				restart
+			</Button>
 			<EndgameDrawer gameOutcome={gameOutcome} restart={restart} />
 		</div>
 	)
