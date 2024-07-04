@@ -7,7 +7,10 @@ export const GET = async (request: Request) => {
 	const fen = searchParams.get("fen")
 	if (!fen) return new NextResponse("FEN query param is required", { status: 400 })
 
-	const maxTime = Number.parseInt(searchParams.get("maxTime") || "1000", 10)
+	const maxTimeString = searchParams.get("maxTime")
+	if (!maxTimeString) return new NextResponse("maxTime query param is required", { status: 400 })
+
+	const maxTime = Number.parseInt(maxTimeString, 10)
 
 	try {
 		const bestMove = await getStockfishMove(fen, maxTime)
