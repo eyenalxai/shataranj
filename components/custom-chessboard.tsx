@@ -20,7 +20,7 @@ export const CustomChessboard = ({ fen, onPieceDrop, disabled }: CustomChessboar
 			onPieceDrop={onPieceDrop}
 			arePiecesDraggable={!disabled}
 			customDarkSquareStyle={{
-				backgroundColor: resolvedTheme === "dark" ? "#404040" : "#737373"
+				backgroundColor: resolvedTheme === "dark" ? "#404040" : "#a3a3a3"
 			}}
 			customLightSquareStyle={{
 				backgroundColor: resolvedTheme === "dark" ? "#737373" : "#d4d4d4"
