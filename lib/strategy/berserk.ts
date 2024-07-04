@@ -10,7 +10,7 @@ export const berserkMove = async ({ fen, signal }: BerserkMoveProps) => {
 	const chessboard = new Chess(fen)
 
 	const legalMoves = chessboard.moves({ verbose: true })
-	const captureMoves = legalMoves.filter((move) => move.flags.includes("c"))
+	const captureMoves = legalMoves.filter((move) => move.flags.includes("c") || move.flags.includes("e"))
 
 	if (captureMoves.length === 1) return captureMoves[0].lan
 	if (captureMoves.length > 1)
