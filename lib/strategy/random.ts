@@ -1,6 +1,5 @@
+import { randomElement } from "@/lib/utils"
 import { Chess } from "chess.js"
-
-export const randomElement = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)]
 
 type RandomMoveProps = {
 	fen: string

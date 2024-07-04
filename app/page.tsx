@@ -22,6 +22,7 @@ export default function Home() {
 
 	return (
 		<div className={cn("flex", "flex-col", "items-start", "gap-y-2")}>
+			{JSON.stringify(chessboard.fen())}
 			<SelectStrategies playerControls={playerControls} setPlayerStrategy={setPlayerStrategy} />
 			<div
 				className={cn(["size-[320px]", "sm:size-[360pcx]", "md:size-[480px]", "lg:size-[560px]", "xl:size-[600px]"])}

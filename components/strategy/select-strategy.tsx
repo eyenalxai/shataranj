@@ -21,6 +21,7 @@ export const SelectStrategy = ({ value, player, setPlayerStrategy }: SelectStrat
 	const strategyNames: Record<ControlMethod, string> = {
 		manual: "manual",
 		"random-move": "random move",
+		berserk: "berserk",
 		"stockfish-10": "stockfish 10",
 		"stockfish-100": "stockfish 100",
 		"stockfish-500": "stockfish 500",

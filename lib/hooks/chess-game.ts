@@ -1,5 +1,6 @@
 "use client"
 
+import { berserkMove } from "@/lib/strategy/berserk"
 import { randomMove } from "@/lib/strategy/random"
 import { stockfishMove } from "@/lib/strategy/stockfish"
 import {
@@ -64,6 +65,8 @@ export const useChessGame = () => {
 				switch (strategy) {
 					case "random-move":
 						return randomMove({ fen: fen })
+					case "berserk":
+						return berserkMove({ fen: fen })
 					case "stockfish-10":
 						return stockfishMove({ fen: fen, maxTime: 10, signal: signal })
 					case "stockfish-100":

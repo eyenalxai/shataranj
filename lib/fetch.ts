@@ -1,3 +1,5 @@
+import { toast } from "sonner"
+
 type FetcherProps = {
 	endpoint: string
 	method?: "GET" | "POST" | "PATCH"
@@ -12,4 +14,16 @@ export const fetcher = ({ endpoint, method, body, signal }: FetcherProps) => {
 		cache: "no-store",
 		signal: signal
 	})
+		.then((response) => {
+			if (!response.ok) {
+				toast.error(`Error: ${response.status} ${response.statusText}`)
+				return null
+			}
+			return response
+		})
+		.catch((error) => {
+			if (error.name === "AbortError") return null
+			toast.error(`${error}`)
+			return null
+		})
 }

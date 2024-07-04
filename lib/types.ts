@@ -9,7 +9,7 @@ type StockfishStrategy =
 	| "stockfish-3000"
 	| "stockfish-5000"
 
-export type Strategy = "random-move" | StockfishStrategy
+export type Strategy = "random-move" | "berserk" | StockfishStrategy
 
 export type ControlMethod = "manual" | Strategy
 
