@@ -30,7 +30,7 @@ export const SelectStrategy = ({ value, player, setPlayerStrategy }: SelectStrat
 		"stockfish-5000": "stockfish 5000"
 	}
 
-	const oof = player === "w" ? "white" : "black"
+	const playerColor = player === "w" ? "white" : "black"
 
 	return (
 		<div className={cn("flex", "flex-col", "justify-center", "items-start")}>
@@ -44,11 +44,11 @@ export const SelectStrategy = ({ value, player, setPlayerStrategy }: SelectStrat
 				}}
 			>
 				<SelectTrigger className={cn("w-36")}>
-					<SelectValue placeholder={`${oof} strategy`} />
+					<SelectValue placeholder={`${playerColor} strategy`} />
 				</SelectTrigger>
 				<SelectContent>
 					<SelectGroup>
-						<SelectLabel>{oof}</SelectLabel>
+						<SelectLabel>{playerColor}</SelectLabel>
 						{Object.entries(strategyNames).map(([strategy, name]) => (
 							<SelectItem key={strategy} value={strategy}>
 								{name}
