@@ -45,7 +45,7 @@ export const SelectStrategy = ({ value, player, setPlayerStrategy }: SelectStrat
 					})
 				}}
 			>
-				<SelectTrigger className={cn("w-44")}>
+				<SelectTrigger className={cn("w-36")}>
 					<SelectValue placeholder={`${oof} strategy`} />
 				</SelectTrigger>
 				<SelectContent>
