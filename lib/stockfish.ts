@@ -20,21 +20,17 @@ export const getBestMoveFromLegalMoves = async (
 				spawnStockfish<number>(fen, maxTimeEach, resolve, reject, stockfishEvaluationHandler, move)
 			}).catch((error) => {
 				console.error(`Error evaluating move ${15}:`, error)
-				return Number.NEGATIVE_INFINITY // Choosing to catch error to not fail all; adjust as needed
+				return Number.NEGATIVE_INFINITY
 			})
 		)
 	)
 
-	let bestEvaluation = Number.NEGATIVE_INFINITY
-	let bestMove = ""
-	for (let i = 0; i < evaluations.length; i++) {
-		if (evaluations[i] > bestEvaluation) {
-			bestEvaluation = evaluations[i]
-			bestMove = legalMoves[i]
-		}
-	}
-
-	return bestMove
+	return legalMoves[
+		evaluations.reduce(
+			(bestIndex, currentValue, currentIndex) => (currentValue > evaluations[bestIndex] ? currentIndex : bestIndex),
+			0
+		)
+	]
 }
 
 const spawnStockfish = <T>(
@@ -45,6 +41,7 @@ const spawnStockfish = <T>(
 	handler: (data: Buffer, resolve: ResolveFunction<T>) => void,
 	move?: string
 ): ChildProcessWithoutNullStreams => {
+	console.log("Spawning stockfish")
 	const stockfish = spawn("stockfish")
 
 	const cleanupAndResolve: ResolveFunction<T> = (value) => {
