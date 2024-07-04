@@ -16,10 +16,11 @@ export const randomMove = ({ fen }: RandomMoveProps) => {
 type StockFishMoveProps = {
 	fen: string
 	maxTime: number
+	signal?: AbortSignal
 }
 
-export const stockFishMove = async ({ fen, maxTime }: StockFishMoveProps) => {
-	return fetcher(`/api/moves/stockfish?fen=${fen}&maxTime=${maxTime}`)
+export const stockFishMove = async ({ fen, maxTime, signal }: StockFishMoveProps) => {
+	return fetcher({ endpoint: `/api/moves/stockfish?fen=${fen}&maxTime=${maxTime}`, signal: signal })
 		.then((response) => {
 			if (!response.ok) {
 				toast.error(`Error: ${response.status} ${response.statusText}`)
@@ -28,6 +29,7 @@ export const stockFishMove = async ({ fen, maxTime }: StockFishMoveProps) => {
 			return response.text()
 		})
 		.catch((error) => {
+			if (error.name === "AbortError") return null
 			toast.error(`${error}`)
 			return null
 		})

@@ -48,11 +48,14 @@ export const useChessGame = () => {
 
 		if (strategy === "manual") return
 
+		const controller = new AbortController()
+		const signal = controller.signal
+
 		const makeMove = async () => {
 			const execute = strategyFunctions[strategy]
 
 			if (execute) {
-				const chessMove = await execute(chessboard.fen())
+				const chessMove = await execute(chessboard.fen(), signal)
 				if (chessMove === null) return
 
 				const chessboardCopy = new Chess(chessboard.fen())
@@ -65,7 +68,10 @@ export const useChessGame = () => {
 			makeMove().catch((error) => toast.error(`${error}`))
 		}, 400)
 
-		return () => clearTimeout(timeout)
+		return () => {
+			clearTimeout(timeout)
+			controller.abort()
+		}
 	}, [playerControls, chessboard, gameOutcome, isPaused])
 
 	const onPieceDrop = (sourceSquare: Square, targetSquare: Square) => {

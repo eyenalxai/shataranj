@@ -13,6 +13,7 @@ type ExecuteStrategyProps =
 			strategy: "stockfish"
 			maxTime: number
 			fen: string
+			signal: AbortSignal
 	  }
 
 export const executeStrategy = (props: ExecuteStrategyProps): string | Promise<string | null> => {
@@ -20,7 +21,7 @@ export const executeStrategy = (props: ExecuteStrategyProps): string | Promise<s
 		case "random-move":
 			return randomMove({ fen: props.fen })
 		case "stockfish":
-			return stockFishMove({ fen: props.fen, maxTime: props.maxTime })
+			return stockFishMove({ fen: props.fen, maxTime: props.maxTime, signal: props.signal })
 		default:
 			return exhaustiveCheck(props)
 	}
