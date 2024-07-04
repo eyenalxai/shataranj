@@ -7,12 +7,18 @@ type StockfishMoveProps = {
 }
 
 export const stockfishMove = async ({ fen, maxTime, signal }: StockfishMoveProps) => {
-	return fetcher({ endpoint: `/api/moves/stockfish?fen=${fen}&maxTime=${maxTime}`, signal: signal }).then(
-		(response) => {
-			if (!response) return null
-			return response.text()
-		}
-	)
+	return fetcher({
+		endpoint: "/api/moves/stockfish",
+		method: "POST",
+		body: {
+			fen,
+			maxTime
+		},
+		signal: signal
+	}).then((response) => {
+		if (!response) return null
+		return response.text()
+	})
 }
 
 type GetBestMoveProps = {
