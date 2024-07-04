@@ -14,21 +14,26 @@ export const getBestMoveFromLegalMoves = async (
 	legalMoves: string[],
 	maxTimeEach: number
 ): Promise<string> => {
-	let bestMove = ""
-	let bestEvaluation = Number.NEGATIVE_INFINITY
-	for (const move of legalMoves) {
-		try {
-			const evaluation = await new Promise<number>((resolve, reject) => {
+	const evaluations = await Promise.all(
+		legalMoves.map((move) =>
+			new Promise<number>((resolve, reject) => {
 				spawnStockfish<number>(fen, maxTimeEach, resolve, reject, stockfishEvaluationHandler, move)
+			}).catch((error) => {
+				console.error(`Error evaluating move ${15}:`, error)
+				return Number.NEGATIVE_INFINITY // Choosing to catch error to not fail all; adjust as needed
 			})
-			if (evaluation > bestEvaluation) {
-				bestEvaluation = evaluation
-				bestMove = move
-			}
-		} catch (error) {
-			console.error(`Error evaluating move ${move}:`, error)
+		)
+	)
+
+	let bestEvaluation = Number.NEGATIVE_INFINITY
+	let bestMove = ""
+	for (let i = 0; i < evaluations.length; i++) {
+		if (evaluations[i] > bestEvaluation) {
+			bestEvaluation = evaluations[i]
+			bestMove = legalMoves[i]
 		}
 	}
+
 	return bestMove
 }
 
