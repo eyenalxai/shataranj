@@ -9,7 +9,7 @@ type SelectStrategiesProps = {
 
 export const SelectStrategies = ({ playerControls, setPlayerStrategy }: SelectStrategiesProps) => {
 	return (
-		<div className={cn("flex", "flex-row", "justify-center", "items-center", "gap-x-2")}>
+		<div className={cn("flex", ["flex-col", "sm:flex-row"], "justify-center", "items-center", "gap-2")}>
 			<SelectStrategy value={playerControls.w} player={"w"} setPlayerStrategy={setPlayerStrategy} />
 			<SelectStrategy value={playerControls.b} player={"b"} setPlayerStrategy={setPlayerStrategy} />
 		</div>
