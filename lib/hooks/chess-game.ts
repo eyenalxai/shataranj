@@ -1,6 +1,7 @@
 "use client"
 
 import { berserkMove } from "@/lib/strategy/berserk"
+import { pacifistMove } from "@/lib/strategy/pacifist"
 import { randomMove } from "@/lib/strategy/random"
 import { getBestMove } from "@/lib/strategy/stockfish"
 import {
@@ -65,10 +66,12 @@ export const useChessGame = () => {
 				switch (strategy) {
 					case "random-move":
 						return randomMove({ fen: fen })
-					case "berserk":
-						return berserkMove({ fen: fen, signal: signal })
 					case "stockfish":
 						return getBestMove({ fen: fen, maxTime: 200, signal: signal })
+					case "berserk":
+						return berserkMove({ fen: fen, signal: signal })
+					case "pacifist":
+						return pacifistMove({ fen: fen, signal: signal })
 					default:
 						return exhaustiveCheck(strategy)
 				}
