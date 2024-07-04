@@ -1,14 +1,14 @@
 import { fetcher } from "@/lib/fetch"
 
-type StockfishMoveProps = {
+type GetBestMoveMoveProps = {
 	fen: string
 	maxTime: number
 	signal: AbortSignal
 }
 
-export const stockfishMove = async ({ fen, maxTime, signal }: StockfishMoveProps) => {
+export const getBestMove = async ({ fen, maxTime, signal }: GetBestMoveMoveProps) => {
 	return fetcher({
-		endpoint: "/api/moves/stockfish",
+		endpoint: "/api/stockfish/best-move",
 		method: "POST",
 		body: {
 			fen,
@@ -21,15 +21,15 @@ export const stockfishMove = async ({ fen, maxTime, signal }: StockfishMoveProps
 	})
 }
 
-type GetBestMoveProps = {
+type GetBestMoveFromListProps = {
 	fen: string
 	moves: string[]
 	signal: AbortSignal
 }
 
-export const getBestMove = async ({ fen, moves, signal }: GetBestMoveProps) => {
+export const getBestMoveFromList = async ({ fen, moves, signal }: GetBestMoveFromListProps) => {
 	return fetcher({
-		endpoint: "/api/moves/evaluate",
+		endpoint: "/api/stockfish/best-from-list",
 		method: "POST",
 		body: {
 			fen,

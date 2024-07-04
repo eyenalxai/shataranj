@@ -1,4 +1,4 @@
-import { getBestMove, stockfishMove } from "@/lib/strategy/stockfish"
+import { getBestMove, getBestMoveFromList } from "@/lib/strategy/stockfish"
 import { Chess } from "chess.js"
 
 type BerserkMoveProps = {
@@ -13,7 +13,8 @@ export const berserkMove = async ({ fen, signal }: BerserkMoveProps) => {
 	const captureMoves = legalMoves.filter((move) => move.flags.includes("c"))
 
 	if (captureMoves.length === 1) return captureMoves[0].lan
-	if (captureMoves.length > 1) return await getBestMove({ fen, moves: captureMoves.map((move) => move.lan), signal })
+	if (captureMoves.length > 1)
+		return await getBestMoveFromList({ fen, moves: captureMoves.map((move) => move.lan), signal })
 
-	return await stockfishMove({ fen, maxTime: 100, signal })
+	return await getBestMove({ fen, maxTime: 100, signal })
 }
