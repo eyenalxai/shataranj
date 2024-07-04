@@ -1,9 +1,9 @@
 "use client"
 
+import { ControlButtons } from "@/components/control-buttons"
 import { CustomChessboard } from "@/components/custom-chessboard"
 import { OutcomeStatus } from "@/components/outcome-status"
 import { SelectStrategies } from "@/components/strategy/select-strategies"
-import { Button } from "@/components/ui/button"
 import { useChessGame } from "@/lib/hooks/chess-game"
 import { cn } from "@/lib/utils"
 
@@ -29,14 +29,7 @@ export default function Home() {
 				<CustomChessboard fen={chessboard.fen()} onPieceDrop={onPieceDrop} disabled={disabled} />
 			</div>
 			<div className={cn("w-full", "flex", "flex-row", "justify-between", "items-center")}>
-				<div className={cn("flex", "flex-row", "gap-2")}>
-					<Button onClick={restart} variant={gameOutcome === null ? "outline" : "default"} className={cn("w-24")}>
-						restart
-					</Button>
-					<Button disabled={gameOutcome !== null} onClick={togglePause} variant={"outline"} className={cn("w-24")}>
-						{isPaused ? "resume" : "pause"}
-					</Button>
-				</div>
+				<ControlButtons restart={restart} togglePause={togglePause} isPaused={isPaused} gameOutcome={gameOutcome} />
 				<OutcomeStatus gameOutcome={gameOutcome} />
 			</div>
 		</div>
