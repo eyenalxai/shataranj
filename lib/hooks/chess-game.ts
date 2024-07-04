@@ -66,7 +66,7 @@ export const useChessGame = () => {
 					case "random-move":
 						return randomMove({ fen: fen })
 					case "berserk":
-						return berserkMove({ fen: fen })
+						return berserkMove({ fen: fen, signal: signal })
 					case "stockfish-10":
 						return stockfishMove({ fen: fen, maxTime: 10, signal: signal })
 					case "stockfish-100":

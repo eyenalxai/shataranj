@@ -1,37 +1,12 @@
 import { type ChildProcessWithoutNullStreams, spawn } from "node:child_process"
 
-export const getStockfishMove = async (fen: string, maxTime: number) => {
-	const stockfish = spawn("stockfish")
+type ResolveFunction<T> = (value: T | PromiseLike<T>) => void
+type RejectFunction = (reason?: Error) => void
 
-	stockfish.stdin.write(`position fen ${fen}\n`)
-	stockfish.stdin.write(`go movetime ${maxTime}\n`)
-
-	return listenForBestMove(stockfish, fen, maxTime)
-}
-
-const listenForBestMove = (stockfish: ChildProcessWithoutNullStreams, fen: string, maxTime: number) => {
-	stockfish.stdin.write(`position fen ${fen}\n`)
-	stockfish.stdin.write(`go movetime ${maxTime}\n`)
-
+export const getStockfishMove = async (fen: string, maxTime: number): Promise<string> => {
 	return new Promise((resolve, reject) => {
-		stockfish.stdout.on("data", (data: Buffer) => {
-			const output = data.toString()
-			const match = output.match(/^bestmove\s(\S+)/m)
-			if (match) {
-				const bestMove = match[1]
-				stockfish.stdin.end()
-				resolve(bestMove)
-			}
-		})
-
-		stockfish.stderr.on("data", (data: Buffer) => {
-			reject(new Error(`Stockfish error: ${data.toString()}`))
-		})
-
-		stockfish.on("close", (code: number) => {
-			if (code !== 0) reject(new Error(`Stockfish exited with code ${code}`))
-		})
-	}) as Promise<string>
+		spawnStockfish<string>(fen, maxTime, resolve, reject, stockfishResultHandler)
+	})
 }
 
 export const getBestMoveFromLegalMoves = async (
@@ -43,7 +18,9 @@ export const getBestMoveFromLegalMoves = async (
 	let bestEvaluation = Number.NEGATIVE_INFINITY
 	for (const move of legalMoves) {
 		try {
-			const evaluation = await evaluateMove(fen, move, maxTimeEach)
+			const evaluation = await new Promise<number>((resolve, reject) => {
+				spawnStockfish<number>(fen, maxTimeEach, resolve, reject, stockfishEvaluationHandler, move)
+			})
 			if (evaluation > bestEvaluation) {
 				bestEvaluation = evaluation
 				bestMove = move
@@ -55,36 +32,59 @@ export const getBestMoveFromLegalMoves = async (
 	return bestMove
 }
 
-const evaluateMove = (fen: string, move: string, maxTime: number): Promise<number> => {
-	return new Promise((resolve, reject) => {
-		const stockfish = spawn("stockfish")
-		let depthReached = 0
-		stockfish.stdin.write("uci\n")
-		// Wait for readyok before proceeding
-		stockfish.stdin.write(`position fen ${fen} moves ${move}\n`)
-		stockfish.stdin.write(`go movetime ${maxTime}\n`)
+const spawnStockfish = <T>(
+	fen: string,
+	maxTime: number,
+	resolve: ResolveFunction<T>,
+	reject: RejectFunction,
+	handler: (data: Buffer, resolve: ResolveFunction<T>) => void,
+	move?: string
+): ChildProcessWithoutNullStreams => {
+	const stockfish = spawn("stockfish")
 
-		stockfish.stdout.on("data", (data: Buffer) => {
-			const output = data.toString()
-			if (/bestmove/.test(output)) {
-				resolve(depthReached) // Using depth as a proxy for move quality
-			}
-			const depthMatch = output.match(/depth (\d+)/)
-			if (depthMatch) {
-				depthReached = Number.parseInt(depthMatch[1], 10)
-			}
-		})
+	const cleanupAndResolve: ResolveFunction<T> = (value) => {
+		stockfish.kill()
+		resolve(value)
+	}
 
-		stockfish.stderr.on("data", (data: Buffer) => {
-			reject(new Error(`Stockfish error: ${data.toString()}`))
-		})
+	const cleanupAndReject = (reason?: Error) => {
+		stockfish.kill()
+		reject(reason)
+	}
 
-		stockfish.on("close", (code: number) => {
-			if (code !== 0) {
-				reject(new Error(`Stockfish exited with code ${code}`))
-			} else {
-				resolve(depthReached) // Ensure resolution even if bestmove isn't found
-			}
-		})
+	stockfish.stdin.write("uci\n")
+	stockfish.stdin.write(`position fen ${fen}${move ? ` moves ${move}` : ""}\n`)
+	stockfish.stdin.write(`go movetime ${maxTime}\n`)
+
+	stockfish.stdout.on("data", (data: Buffer) => handler(data, cleanupAndResolve))
+	stockfish.stderr.on("data", (data: Buffer) => cleanupAndReject(new Error(`Stockfish error: ${data.toString()}`)))
+
+	stockfish.on("error", cleanupAndReject)
+
+	stockfish.on("close", (code: number) => {
+		if (code !== 0) cleanupAndReject(new Error(`Stockfish exited with code ${code}`))
 	})
+
+	return stockfish
+}
+
+const stockfishResultHandler = (data: Buffer, resolve: ResolveFunction<string>) => {
+	const output = data.toString()
+	const match = output.match(/^bestmove\s(\S+)/m)
+	if (match) {
+		const bestMove = match[1]
+		resolve(bestMove)
+	}
+}
+
+const stockfishEvaluationHandler = (data: Buffer, resolve: ResolveFunction<number>) => {
+	const output = data.toString()
+	let depthReached = 0
+	const depthMatch = output.match(/depth (\d+)/)
+	if (depthMatch) {
+		depthReached = Number.parseInt(depthMatch[1], 10)
+	}
+	if (/bestmove/.test(output)) {
+		resolve(depthReached)
+	}
 }
